@@ -223,9 +223,10 @@ let expanded = {};
 let isAdmin = false;
 
 async function db(path, opts={}) {
+  const { headers: extraHeaders, ...restOpts } = opts;
   const r = await fetch(SUPA_URL + '/rest/v1/' + path, {
-    headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation', ...opts.headers },
-    ...opts
+    headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation', ...extraHeaders },
+    ...restOpts
   });
   if (!r.ok) throw new Error(await r.text());
   const t = await r.text();
@@ -308,7 +309,7 @@ async function addEntry() {
   try {
     const payload = { title, body, source: source||null, media: media.length ? media : null, cat: selCatVal, date: new Date().toLocaleDateString('ro-RO') };
     if (editingId) {
-      await db('entries?id=eq.' + editingId, { method: 'PATCH', body: JSON.stringify(payload) });
+      await db('entries?id=eq.' + editingId, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(payload) });
       editingId = null;
       toast('✓ Modificări salvate!');
     } else {
