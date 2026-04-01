@@ -1,9 +1,8 @@
-const CACHE = 'bmw-e36-v1';
-const FILES = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'bmw-e36-v2';
+const ASSETS = ['/BMW_e36_TU/', '/BMW_e36_TU/index.html', '/BMW_e36_TU/manifest.json'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
-  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
 });
 
 self.addEventListener('activate', e => {
@@ -15,6 +14,10 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/index.html')))
+    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/BMW_e36_TU/index.html')))
   );
+});
+
+self.addEventListener('message', e => {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });
