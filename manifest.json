@@ -2,7 +2,8 @@
   "name": "BMW E36 — Baza de cunoștințe",
   "short_name": "BMW E36",
   "description": "Colecție personală de informații, probleme și soluții pentru BMW E36",
-  "start_url": "/",
+  "start_url": "/BMW_e36_TU/index.html",
+  "scope": "/BMW_e36_TU/",
   "display": "standalone",
   "background_color": "#0f0f1a",
   "theme_color": "#1a1a2e",
@@ -20,7 +21,5 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "categories": ["utilities", "auto"],
-  "lang": "ro"
+  ]
 }
