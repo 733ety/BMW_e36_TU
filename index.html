@@ -163,7 +163,7 @@
       </div>
       <div class="form-section">
         <label class="form-label">Categorie</label>
-        <div class="cat-grid">
+        <div class="cat-grid" id="cat-grid">
           <button class="cat-btn" onclick="selCat(this,'Motor')">🔧 Motor</button>
           <button class="cat-btn" onclick="selCat(this,'Suspensie')">🚗 Suspensie</button>
           <button class="cat-btn" onclick="selCat(this,'Frâne')">🛑 Frâne</button>
@@ -173,7 +173,13 @@
           <button class="cat-btn" onclick="selCat(this,'Electric')">⚡ Electric</button>
           <button class="cat-btn" onclick="selCat(this,'Tuning')">🏁 Tuning</button>
           <button class="cat-btn" onclick="selCat(this,'Probleme')">⚠️ Probleme</button>
+          <button class="cat-btn" onclick="selCat(this,'Mecanică față')">🔩 Mecanică față</button>
+          <button class="cat-btn" onclick="selCat(this,'Mecanică spate')">🔩 Mecanică spate</button>
           <button class="cat-btn" onclick="selCat(this,'Altele')">📌 Altele</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input class="form-input" id="custom-cat-input" type="text" placeholder="+ Categorie nouă..." style="font-size:13px;padding:9px 12px" onkeydown="if(event.key==='Enter')addCustomCat()" />
+          <button onclick="addCustomCat()" style="background:var(--accent);border:none;color:#fff;border-radius:var(--radius-sm);padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0">Adaugă</button>
         </div>
       </div>
       <div class="form-section">
@@ -363,6 +369,24 @@ function goTab(name) {
   });
   if (name==='add' && !editingId) document.getElementById('submit-btn').textContent = '✓ Salvează în baza de date';
   if (name==='stats') renderStats();
+}
+
+function addCustomCat() {
+  const input = document.getElementById('custom-cat-input');
+  const val = input.value.trim();
+  if (!val) return;
+  // Check if already exists
+  const existing = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.textContent.trim() === val);
+  if (existing) { selCat(existing, val); input.value = ''; return; }
+  // Add new button
+  const grid = document.getElementById('cat-grid');
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn';
+  btn.textContent = '📂 ' + val;
+  btn.onclick = () => selCat(btn, val);
+  grid.appendChild(btn);
+  selCat(btn, val);
+  input.value = '';
 }
 
 function selCat(el, cat) {
