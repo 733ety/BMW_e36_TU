@@ -1,490 +1,499 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f0f0f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="DocAuto">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="manifest" href="manifest.json">
-<title>DocAuto</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text:#f0f0f0;--text2:#888;--text3:#555;--green:#4ade80;--green-bg:rgba(74,222,128,0.1);--amber:#fb923c;--amber-bg:rgba(251,146,60,0.1);--red:#f87171;--red-bg:rgba(248,113,113,0.1);--accent:#e8e8e8;--accent-text:#000;--radius:14px;--radius-sm:8px;}
-body.light{--bg:#f5f5f0;--bg2:#fff;--bg3:#eeede8;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#111;--text2:#666;--text3:#aaa;--green:#16a34a;--green-bg:rgba(22,163,74,0.1);--amber:#d97706;--amber-bg:rgba(217,119,6,0.1);--red:#dc2626;--red-bg:rgba(220,38,38,0.1);--accent:#111;--accent-text:#fff;}
-body.light .topbar{background:rgba(245,245,240,0.95);}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(15,15,15,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
-.topbar-left h1{font-size:20px;font-weight:600;letter-spacing:-0.3px;}
-.topbar-left p{font-size:11px;color:var(--text2);margin-top:1px;}
-.topbar-actions{display:flex;align-items:center;gap:8px;}
-.theme-btn{width:40px;height:40px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;}
-.theme-btn:active{transform:scale(0.92);}
-.add-fab{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--accent-text);border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;}
-.add-fab:active{transform:scale(0.92);}
-.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 16px 10px;}
-.summary-pill{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;display:flex;flex-direction:column;gap:2px;}
-.summary-pill .num{font-size:22px;font-weight:600;line-height:1;}
-.summary-pill .lbl{font-size:10px;color:var(--text2);}
-.num-ok{color:var(--green)}.num-warn{color:var(--amber)}.num-danger{color:var(--red)}
-.cars-list{padding:4px 16px 100px;display:flex;flex-direction:column;gap:10px;}
-.car-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.car-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background 0.1s;}
-.car-card-header:hover{background:var(--bg3);}
-
-/* Car photo thumb */
-.car-thumb{width:52px;height:52px;border-radius:10px;background:var(--bg3);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
-.car-thumb img{width:100%;height:100%;object-fit:cover;}
-.car-thumb-placeholder{font-size:26px;line-height:1;}
-
-.car-meta{flex:1;min-width:0;}
-.car-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.car-plate{font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);margin-top:3px;background:var(--bg3);border-radius:4px;padding:1px 6px;display:inline-block;}
-.car-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.status-dot{width:9px;height:9px;border-radius:50%;}
-.dot-ok{background:var(--green);box-shadow:0 0 6px var(--green);}
-.dot-warn{background:var(--amber);box-shadow:0 0 6px var(--amber);}
-.dot-danger{background:var(--red);box-shadow:0 0 6px var(--red);}
-.chevron{color:var(--text3);font-size:12px;transition:transform 0.2s;}
-.chevron.open{transform:rotate(180deg);}
-
-.car-docs{border-top:0.5px solid var(--border);}
-.doc-row{display:flex;align-items:center;padding:12px 16px;border-bottom:0.5px solid var(--border);gap:12px;cursor:pointer;transition:background 0.1s;}
-.doc-row:last-child{border-bottom:none;}
-.doc-row:hover{background:var(--bg3);}
-.doc-badge{font-size:10px;font-weight:600;letter-spacing:0.05em;padding:3px 8px;border-radius:5px;flex-shrink:0;min-width:72px;text-align:center;}
-.badge-ok{background:var(--green-bg);color:var(--green);}
-.badge-warn{background:var(--amber-bg);color:var(--amber);}
-.badge-danger{background:var(--red-bg);color:var(--red);}
-.doc-name{font-size:14px;font-weight:500;flex:1;}
-.doc-expiry{font-size:11px;color:var(--text2);flex-shrink:0;}
-.doc-days{font-size:11px;flex-shrink:0;min-width:60px;text-align:right;}
-.days-ok{color:var(--green)}.days-warn{color:var(--amber)}.days-danger{color:var(--red)}
-.car-footer{border-top:0.5px solid var(--border);display:flex;}
-.car-footer button{flex:1;padding:12px;background:none;border:none;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.1s;color:var(--text2);}
-.car-footer button:hover{background:var(--bg3);}
-.car-footer .btn-del{color:var(--red);border-left:0.5px solid var(--border);}
-.empty{display:flex;flex-direction:column;align-items:center;padding:60px 32px;text-align:center;gap:12px;}
-.empty-icon{font-size:56px;}
-.empty h2{font-size:18px;font-weight:600;}
-.empty p{font-size:14px;color:var(--text2);line-height:1.5;}
-
-/* Sheet */
-.sheet-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);display:flex;align-items:flex-end;animation:fadeIn 0.18s ease;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.sheet{width:100%;background:var(--bg2);border-radius:20px 20px 0 0;border-top:0.5px solid var(--border2);padding-bottom:28px;animation:slideUp 0.25s cubic-bezier(0.32,0.72,0,1);max-height:92vh;overflow-y:auto;}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 4px;}
-.sheet-header{padding:8px 20px 16px;display:flex;align-items:center;justify-content:space-between;}
-.sheet-title{font-size:17px;font-weight:600;}
-.sheet-close{background:var(--bg3);border:none;color:var(--text2);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.sheet-body{padding:0 20px 8px;display:flex;flex-direction:column;gap:18px;}
-.field{display:flex;flex-direction:column;gap:6px;}
-.field label{font-size:12px;font-weight:500;color:var(--text2);letter-spacing:0.04em;}
-.field input[type=text],.field input[type=number],.field input[type=date]{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;width:100%;}
-.field input:focus{outline:none;border-color:rgba(255,255,255,0.35);}
-body.light .field input:focus{border-color:rgba(0,0,0,0.4);}
-.field input[type=date]{color-scheme:dark;}
-body.light .field input[type=date]{color-scheme:light;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.sheet-section-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;padding-top:4px;border-top:0.5px solid var(--border);}
-.btn-primary{margin:16px 20px 0;background:var(--accent);color:var(--accent-text);border:none;border-radius:var(--radius-sm);padding:15px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;width:calc(100% - 40px);cursor:pointer;transition:opacity 0.15s;}
-.btn-primary:hover{opacity:0.85;}
-.rev-preview{font-size:13px;color:var(--text2);padding:4px 0 0;line-height:1.6;}
-
-/* Photo upload */
-.photo-upload-area{display:flex;flex-direction:column;align-items:center;gap:10px;}
-.photo-preview-box{width:100%;height:160px;border-radius:var(--radius-sm);background:var(--bg3);border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;position:relative;transition:border-color 0.15s;}
-.photo-preview-box:hover{border-color:var(--text2);}
-.photo-preview-box img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);}
-.photo-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text2);}
-.photo-placeholder .ph-icon{font-size:32px;}
-.photo-placeholder span{font-size:13px;}
-.photo-actions{display:flex;gap:8px;width:100%;}
-.photo-btn{flex:1;padding:10px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text2);cursor:pointer;text-align:center;transition:background 0.1s;}
-.photo-btn:hover{background:var(--bg);color:var(--text);}
-.photo-btn.danger{color:var(--red);border-color:rgba(248,113,113,0.3);}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BMW E36" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>BMW E36 — Baza de cunoștințe</title>
+  <style>
+    :root {
+      --bg:#0f0f1a;--surface:#1a1a2e;--surface2:#22223b;
+      --border:rgba(255,255,255,0.08);--text:#f0f0f5;--muted:#8888aa;
+      --accent:#4f6ef7;--accent2:#7c5cbf;--danger:#e24b4a;
+      --radius:14px;--radius-sm:8px;
+    }
+    :root.light {
+      --bg:#f4f4f8;--surface:#ffffff;--surface2:#eaeaf0;
+      --border:rgba(0,0,0,0.09);--text:#111122;--muted:#666688;
+      --accent:#3355dd;--accent2:#6633aa;--danger:#cc2222;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;}
+    .app{display:flex;flex-direction:column;height:100dvh;}
+    .header{background:var(--surface);padding:env(safe-area-inset-top,12px) 16px 0;border-bottom:0.5px solid var(--border);flex-shrink:0;}
+    .header-inner{display:flex;align-items:center;gap:12px;padding-top:6px;padding-bottom:12px;}
+    .logo{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+    .logo img{width:100%;height:100%;object-fit:cover;}
+    .header-text h1{font-size:17px;font-weight:700;}
+    .header-text p{font-size:11px;color:var(--muted);margin-top:1px;}
+    .header-btns{margin-left:auto;display:flex;gap:8px;align-items:center;}
+    .icon-btn{background:var(--surface2);border:0.5px solid var(--border);border-radius:999px;padding:7px 11px;font-size:17px;cursor:pointer;line-height:1;color:var(--text);}
+    .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(72px + env(safe-area-inset-bottom,0px));}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:0.5px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;border:none;background:none;color:var(--muted);font-size:11px;cursor:pointer;}
+    .nav-btn.active{color:var(--accent);}
+    .nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    .panel{display:none;}.panel.active{display:block;}
+    .search-wrap{position:relative;margin-bottom:14px;}
+    .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
+    .search-wrap input{width:100%;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px 10px 38px;font-size:15px;color:var(--text);outline:none;}
+    .search-wrap input::placeholder{color:var(--muted);}
+    .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none;}
+    .chips::-webkit-scrollbar{display:none;}
+    .chip{padding:6px 14px;border-radius:999px;font-size:13px;white-space:nowrap;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;flex-shrink:0;}
+    .chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500;}
+    .cards{display:flex;flex-direction:column;gap:10px;}
+    .card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;}
+    .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+    .card-title{font-size:15px;font-weight:600;line-height:1.3;}
+    .card-date{font-size:11px;color:var(--muted);margin-top:3px;}
+    .badge{font-size:11px;padding:3px 9px;border-radius:999px;flex-shrink:0;font-weight:500;}
+    .card-body{font-size:13px;color:var(--muted);line-height:1.6;}
+    .card-full{background:var(--surface2);border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;font-size:13px;color:var(--text);line-height:1.7;white-space:pre-wrap;word-break:break-word;}
+    .card-source{font-size:11px;color:var(--accent);margin-top:8px;}
+    .card-actions{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+    .expand-btn{background:none;border:none;color:var(--accent);font-size:12px;padding:5px 0;cursor:pointer;}
+    .del-btn{background:rgba(226,75,74,0.12);border:none;color:var(--danger);font-size:12px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;}
+    .empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;line-height:1.7;}
+    .empty-icon{font-size:48px;margin-bottom:12px;}
+    .form-section{margin-bottom:18px;}
+    .form-label{font-size:13px;color:var(--muted);margin-bottom:8px;display:block;}
+    .form-input{width:100%;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:15px;color:var(--text);outline:none;font-family:inherit;}
+    .form-input:focus{border-color:var(--accent);}
+    .form-input::placeholder{color:var(--muted);}
+    textarea.form-input{height:120px;resize:vertical;}
+    .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .cat-btn{padding:10px 6px;font-size:13px;border:0.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);cursor:pointer;text-align:center;}
+    .cat-btn.sel{border-color:var(--accent);background:rgba(79,110,247,0.15);color:var(--accent);font-weight:600;}
+    .submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;margin-top:4px;}
+    .submit-btn:active{opacity:0.85;}.submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+    .stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;}
+    .stat-val{font-size:28px;font-weight:700;}
+    .stat-lbl{font-size:11px;color:var(--muted);margin-top:4px;}
+    .bar-row{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;}
+    .bar-header{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
+    .bar-count{color:var(--muted);}
+    .bar-track{background:var(--surface2);border-radius:999px;height:5px;}
+    .bar-fill{height:5px;border-radius:999px;transition:width 0.4s;}
+    .toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);color:var(--text);font-size:13px;padding:10px 20px;border-radius:var(--radius-sm);opacity:0;transition:all 0.25s;z-index:999;white-space:nowrap;border:0.5px solid var(--border);pointer-events:none;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .pin-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;}
+    .pin-logo{width:80px;height:80px;margin-bottom:24px;border-radius:50%;overflow:hidden;}
+    .pin-logo img{width:100%;height:100%;object-fit:cover;}
+    .pin-title{font-size:22px;font-weight:700;margin-bottom:6px;text-align:center;}
+    .pin-sub{font-size:14px;color:var(--muted);margin-bottom:28px;text-align:center;line-height:1.6;}
+    .pin-input{width:100%;max-width:300px;padding:13px 16px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);font-size:16px;color:var(--text);outline:none;text-align:center;letter-spacing:2px;margin-bottom:12px;}
+    .pin-input:focus{border-color:var(--accent);}
+    .pin-btn{width:100%;max-width:300px;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;}
+    .pin-skip{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;text-decoration:underline;}
+    .pin-err{color:var(--danger);font-size:13px;margin-bottom:8px;min-height:18px;}
+    .media-links-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+    .media-input-row{display:flex;gap:6px;align-items:center;}
+    .media-input-row input{flex:1;}
+    .media-rm-btn{background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);color:var(--danger);font-size:16px;padding:6px 10px;cursor:pointer;flex-shrink:0;}
+    .add-media-btn{background:none;border:0.5px dashed var(--border);border-radius:var(--radius-sm);color:var(--accent);font-size:13px;padding:10px;width:100%;cursor:pointer;margin-top:6px;}
+    .card-media{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+    .media-thumb{width:100%;border-radius:var(--radius-sm);overflow:hidden;border:0.5px solid var(--border);}
+    .media-thumb img{width:100%;max-height:220px;object-fit:cover;display:block;}
+    .media-thumb iframe{width:100%;height:200px;border:none;display:block;}
+    .media-link-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);color:var(--accent);font-size:13px;text-decoration:none;border:0.5px solid var(--border);}
+    .media-link-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .edit-btn{background:rgba(79,110,247,0.12);border:none;color:var(--accent);font-size:12px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;}
+    .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .update-banner{position:fixed;top:0;left:0;right:0;background:var(--accent);color:#fff;font-size:13px;font-weight:600;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:600;transform:translateY(-100%);transition:transform 0.3s;}
+    .update-banner.show{transform:translateY(0);}
+    .update-banner button{background:rgba(255,255,255,0.25);border:none;color:#fff;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;}
+  </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-left"><h1>DocAuto</h1><p>ITP · RCA · Rovinieta · Revizie</p></div>
-  <div class="topbar-actions">
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">&#127769;</button>
-    <button class="add-fab" onclick="openAddCar()">+</button>
-  </div>
+<div class="update-banner" id="update-banner">
+  🔄 Update disponibil!
+  <button onclick="applyUpdate()">Actualizează</button>
 </div>
-<div class="summary-strip" id="summaryStrip"></div>
-<div class="cars-list" id="carsList"></div>
-<div id="sheetOverlay" style="display:none;"></div>
-<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoFile(this)">
+
+<div id="pin-overlay" class="pin-overlay">
+  <div class="pin-logo"><img src="icons/icon-192.png" /></div>
+  <div class="pin-title">BMW E36</div>
+  <div class="pin-sub">Intră ca administrator pentru a adăuga și edita,<br>sau continuă ca vizitator.</div>
+  <input class="pin-input" id="pin-input" type="password" placeholder="Parolă admin" onkeydown="if(event.key==='Enter')tryPin()" />
+  <div class="pin-err" id="pin-err"></div>
+  <button class="pin-btn" onclick="tryPin()">🔑 Intră ca admin</button>
+  <button class="pin-skip" onclick="enterAsGuest()">Continuă ca vizitator →</button>
+</div>
+
+<div class="app">
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo"><img src="icons/icon-192.png" /></div>
+      <div class="header-text">
+        <h1>BMW E36</h1>
+        <p id="sync-status">Baza de cunoștințe</p>
+      </div>
+      <div class="header-btns">
+        <button class="icon-btn" onclick="loadEntries()" title="Refresh">🔄</button>
+        <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="panel active" id="p-browse">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search" placeholder="Caută..." oninput="renderCards()" />
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="cards" id="cards">
+        <div class="empty"><div class="spinner"></div>Se încarcă...</div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-add">
+      <div class="form-section">
+        <label class="form-label">Titlu</label>
+        <input class="form-input" id="f-title" type="text" placeholder="Ex: Schimb ulei — interval și specificații" />
+      </div>
+      <div class="form-section">
+        <label class="form-label">Categorie</label>
+        <div class="cat-grid">
+          <button class="cat-btn" onclick="selCat(this,'Motor')">🔧 Motor</button>
+          <button class="cat-btn" onclick="selCat(this,'Suspensie')">🚗 Suspensie</button>
+          <button class="cat-btn" onclick="selCat(this,'Frâne')">🛑 Frâne</button>
+          <button class="cat-btn" onclick="selCat(this,'Transmisie')">⚙️ Transmisie</button>
+          <button class="cat-btn" onclick="selCat(this,'Caroserie')">🪟 Caroserie</button>
+          <button class="cat-btn" onclick="selCat(this,'Interior')">💺 Interior</button>
+          <button class="cat-btn" onclick="selCat(this,'Electric')">⚡ Electric</button>
+          <button class="cat-btn" onclick="selCat(this,'Tuning')">🏁 Tuning</button>
+          <button class="cat-btn" onclick="selCat(this,'Probleme')">⚠️ Probleme</button>
+          <button class="cat-btn" onclick="selCat(this,'Altele')">📌 Altele</button>
+        </div>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Detalii</label>
+        <textarea class="form-input" id="f-body" placeholder="Descrie problema, soluția, specificațiile tehnice, sfaturi..."></textarea>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Sursă / referință (opțional)</label>
+        <input class="form-input" id="f-source" type="text" placeholder="Ex: forum E36, service BMW, manual tehnic..." />
+      </div>
+      <div class="form-section">
+        <label class="form-label">📎 Poze / Video — linkuri (opțional)</label>
+        <div class="media-links-list" id="media-links-list"></div>
+        <button class="add-media-btn" onclick="addMediaField()">+ Adaugă link (Imgur, YouTube, Google Drive...)</button>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="addEntry()">✓ Salvează în baza de date</button>
+    </div>
+
+    <div class="panel" id="p-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Intrări</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-cats">0</div><div class="stat-lbl">Categorii</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-last" style="font-size:14px;padding-top:4px">—</div><div class="stat-lbl">Ultima</div></div>
+      </div>
+      <div id="s-bars"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-browse" onclick="goTab('browse')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Explorare
+    </button>
+    <button class="nav-btn" id="nav-add" onclick="goTab('add')" style="display:none">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Adaugă
+    </button>
+    <button class="nav-btn" id="nav-stats" onclick="goTab('stats')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Statistici
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-var STORAGE_KEY = 'docauto_v5';
-var DOC_KEYS = ['itp','rca','rovinieta','revizie'];
-var DOC_LABELS = {itp:'ITP',rca:'RCA',rovinieta:'Rovinieta',revizie:'Revizie'};
-var cars = [], expanded = {};
-var _editingCarId = null; // which car is being edited in the sheet
+const SUPA_URL = 'https://czhfdtsqgbgiggjxstzc.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6aGZkdHNxZ2JnaWdnanhzdHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMzYyNjAsImV4cCI6MjA5MDYxMjI2MH0.BNoIhhhhSpDdmYBNq8sg3dVmcBiU0uv2jePy53lI4IU';
+const PW = 'Alexandru98!';
 
-function load(){
-  try{ cars = JSON.parse(localStorage.getItem(STORAGE_KEY))||[]; } catch(e){ cars=[]; }
-  if(!cars.length){
-    cars=[
-      {id:1,name:'BMW E36',plate:'B 733 ETY',photo:'',docs:{itp:{expiry:'2025-08-15'},rca:{expiry:'2025-07-01'},rovinieta:{expiry:'2025-05-10'},revizie:{lastKm:'110000',currentKm:'115000',interval:'10000'}}},
-      {id:2,name:'Dacia Logan',plate:'IF 01 XYZ',photo:'',docs:{itp:{expiry:'2026-11-20'},rca:{expiry:'2026-06-15'},rovinieta:{expiry:'2026-12-01'},revizie:{lastKm:'85000',currentKm:'89500',interval:'10000'}}}
-    ];
-  }
-}
-function save(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(cars)); } catch(e){} }
+let entries = [];
+let selCatVal = '';
+let activeFilter = 'all';
+let expanded = {};
+let isAdmin = false;
 
-/* ── HELPERS ── */
-function daysLeft(d){
-  if(!d) return null;
-  var dt=new Date(d); dt.setHours(0,0,0,0);
-  var n=new Date(); n.setHours(0,0,0,0);
-  return Math.ceil((dt-n)/86400000);
-}
-function statusOf(d){ if(d===null||d<0) return'danger'; if(d<=30) return'warn'; return'ok'; }
-function revKmLeft(rev){
-  if(!rev||!rev.lastKm) return null;
-  return (parseInt(rev.lastKm)||0)+(parseInt(rev.interval)||10000)-(parseInt(rev.currentKm)||0);
-}
-function revStatus(rev){
-  var km=revKmLeft(rev);
-  if(km===null) return'danger'; if(km<=0) return'danger'; if(km<=1500) return'warn'; return'ok';
-}
-function revNextKm(rev){
-  if(!rev||!rev.lastKm) return null;
-  return (parseInt(rev.lastKm)||0)+(parseInt(rev.interval)||10000);
-}
-function carStatus(c){
-  var w='ok';
-  for(var i=0;i<DOC_KEYS.length;i++){
-    var k=DOC_KEYS[i], s;
-    if(k==='revizie') s=revStatus(c.docs&&c.docs.revizie);
-    else s=statusOf(daysLeft(c.docs&&c.docs[k]&&c.docs[k].expiry));
-    if(s==='danger') return'danger';
-    if(s==='warn') w='warn';
-  }
-  return w;
-}
-function fmtDate(d){ if(!d) return '\u2014'; return new Date(d).toLocaleDateString('ro-RO',{day:'2-digit',month:'short',year:'numeric'}); }
-function fmtKm(n){ if(n===null||n===undefined||n==='') return'\u2014'; return Number(n).toLocaleString('ro-RO')+' km'; }
-function daysLabel(d){ if(d===null) return'Necompletat'; if(d<0) return'Exp. '+Math.abs(d)+'z'; if(d===0) return'Azi!'; if(d===1) return'Maine!'; return d+'z'; }
-function badgeLabel(d){ if(d===null) return'LIPSA'; if(d<0) return'EXPIRAT'; if(d<=30) return'EXPIRA'; return'VALID'; }
-
-/* ── PHOTO ── */
-function thumbHtml(photo, name){
-  if(photo){
-    return '<div class="car-thumb"><img src="'+photo+'" alt="'+name+'"></div>';
-  }
-  // Initials fallback
-  var initials = (name||'?').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
-  return '<div class="car-thumb"><div class="car-thumb-placeholder">'+initials+'</div></div>';
-}
-
-function resizeImage(file, cb){
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var img = new Image();
-    img.onload = function(){
-      var maxW=600, maxH=400;
-      var w=img.width, h=img.height;
-      if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
-      if(h>maxH){ w=Math.round(w*maxH/h); h=maxH; }
-      var canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      cb(canvas.toDataURL('image/jpeg',0.82));
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-var _photoTarget = null; // 'add' or carId for edit
-
-function triggerPhotoUpload(target){
-  _photoTarget = target;
-  var inp = document.getElementById('photoInput');
-  inp.value='';
-  inp.click();
-}
-
-function handlePhotoFile(input){
-  if(!input.files||!input.files[0]) return;
-  resizeImage(input.files[0], function(dataUrl){
-    if(_photoTarget === 'add'){
-      // update preview in add sheet
-      var prev = document.getElementById('photo_preview_img');
-      if(prev){ prev.src=dataUrl; prev.style.display='block'; }
-      var ph = document.getElementById('photo_placeholder');
-      if(ph) ph.style.display='none';
-      var hidden = document.getElementById('f_photo');
-      if(hidden) hidden.value=dataUrl;
-    } else {
-      // edit - find car and save
-      var car = cars.find(function(c){return c.id===_photoTarget;});
-      if(car){ car.photo=dataUrl; save(); closeSheet(); render(); }
-    }
+async function db(path, opts={}) {
+  const { headers: extraHeaders, ...restOpts } = opts;
+  const r = await fetch(SUPA_URL + '/rest/v1/' + path, {
+    headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation', ...extraHeaders },
+    ...restOpts
   });
+  if (!r.ok) throw new Error(await r.text());
+  const t = await r.text();
+  return t ? JSON.parse(t) : [];
 }
 
-function removePhoto(target){
-  if(target==='add'){
-    var prev=document.getElementById('photo_preview_img');
-    if(prev){prev.src='';prev.style.display='none';}
-    var ph=document.getElementById('photo_placeholder');
-    if(ph) ph.style.display='flex';
-    var hidden=document.getElementById('f_photo');
-    if(hidden) hidden.value='';
+function tryPin() {
+  const val = document.getElementById('pin-input').value;
+  if (val === PW) {
+    isAdmin = true;
+    document.getElementById('pin-overlay').style.display = 'none';
+    document.getElementById('nav-add').style.display = '';
+    loadEntries();
+    toast('✓ Bine ai venit, admin!');
   } else {
-    var car=cars.find(function(c){return c.id===target;});
-    if(car){ car.photo=''; save(); closeSheet(); render(); }
+    document.getElementById('pin-err').textContent = 'Parolă incorectă.';
+    document.getElementById('pin-input').value = '';
+    setTimeout(() => document.getElementById('pin-err').textContent = '', 2000);
   }
 }
 
-/* ── RENDER ── */
-function renderSummary(){
-  var ok=0,w=0,d=0;
-  cars.forEach(function(c){ var s=carStatus(c); if(s==='ok')ok++; else if(s==='warn')w++; else d++; });
-  document.getElementById('summaryStrip').innerHTML=
-    '<div class="summary-pill"><span class="num num-ok">'+ok+'</span><span class="lbl">Fara probleme</span></div>'+
-    '<div class="summary-pill"><span class="num num-warn">'+w+'</span><span class="lbl">Expira curand</span></div>'+
-    '<div class="summary-pill"><span class="num num-danger">'+d+'</span><span class="lbl">Probleme</span></div>';
+function enterAsGuest() {
+  isAdmin = false;
+  document.getElementById('pin-overlay').style.display = 'none';
+  loadEntries();
 }
 
-function renderCars(){
-  var list=document.getElementById('carsList');
-  if(!cars.length){
-    list.innerHTML='<div class="empty"><div class="empty-icon">&#128663;</div><h2>Nicio masina</h2><p>Apasa + pentru a adauga prima masina.</p></div>';
+async function loadEntries() {
+  setStatus('Se sincronizează...');
+  try {
+    entries = await db('entries?select=*&order=created_at.desc');
+    renderAll();
+    setStatus(isAdmin ? '👤 Admin' : '👁 Vizitator');
+  } catch(e) {
+    setStatus('⚠ Eroare conexiune');
+    toast('Nu s-a putut conecta la baza de date.');
+  }
+}
+
+function setStatus(msg) { document.getElementById('sync-status').textContent = msg; }
+
+let editingId = null;
+
+function editEntry(id) {
+  const e = entries.find(x => String(x.id) === String(id));
+  if (!e) { toast('⚠ Intrarea nu a fost găsită.'); return; }
+  editingId = e.id;
+  document.getElementById('f-title').value = e.title;
+  document.getElementById('f-body').value = e.body;
+  document.getElementById('f-source').value = e.source || '';
+  clearMediaFields();
+  if (e.media && e.media.length) {
+    e.media.forEach(url => {
+      const list = document.getElementById('media-links-list');
+      const row = document.createElement('div');
+      row.className = 'media-input-row';
+      row.innerHTML = `<input class="form-input media-url" type="url" value="${url}" style="font-size:13px;padding:9px 12px"/><button class="media-rm-btn" onclick="this.parentElement.remove()">✕</button>`;
+      list.appendChild(row);
+    });
+  }
+  selCatVal = e.cat;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.toggle('sel', b.textContent.includes(e.cat));
+  });
+  document.getElementById('submit-btn').textContent = '✓ Salvează modificările';
+  goTab('add');
+  toast('Editezi: ' + e.title);
+  console.log('editingId setat:', editingId);
+}
+
+async function addEntry() {
+  const title = document.getElementById('f-title').value.trim();
+  const body = document.getElementById('f-body').value.trim();
+  const source = document.getElementById('f-source').value.trim();
+  const media = getMediaLinks();
+  if (!title) { toast('⚠ Adaugă un titlu!'); return; }
+  if (!selCatVal) { toast('⚠ Selectează o categorie!'); return; }
+  if (!body) { toast('⚠ Adaugă detalii!'); return; }
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Se salvează...';
+  try {
+    const payload = { title, body, source: source||null, media: media.length ? media : null, cat: selCatVal, date: new Date().toLocaleDateString('ro-RO') };
+    if (editingId) {
+      await db('entries?id=eq.' + editingId, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(payload) });
+      editingId = null;
+      toast('✓ Modificări salvate!');
+    } else {
+      await db('entries', { method: 'POST', body: JSON.stringify(payload) });
+      toast('✓ Salvat cu succes!');
+    }
+    document.getElementById('f-title').value = '';
+    document.getElementById('f-body').value = '';
+    document.getElementById('f-source').value = '';
+    clearMediaFields();
+    selCatVal = '';
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('sel'));
+    goTab('browse');
+    loadEntries();
+  } catch(e) {
+    toast('⚠ Eroare la salvare!');
+  } finally {
+    btn.disabled = false; btn.textContent = '✓ Salvează în baza de date';
+  }
+}
+
+async function deleteEntry(id) {
+  if (!confirm('Ștergi această intrare?')) return;
+  try {
+    await db('entries?id=eq.' + id, { method: 'DELETE' });
+    entries = entries.filter(e => String(e.id) !== String(id));
+    renderAll(); toast('Șters.');
+  } catch(e) { toast('⚠ Eroare la ștergere.'); }
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function goTab(name) {
+  ['browse','add','stats'].forEach(n => {
+    document.getElementById('p-'+n).classList.toggle('active', n===name);
+    document.getElementById('nav-'+n).classList.toggle('active', n===name);
+  });
+  if (name==='add' && !editingId) document.getElementById('submit-btn').textContent = '✓ Salvează în baza de date';
+  if (name==='stats') renderStats();
+}
+
+function selCat(el, cat) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel'); selCatVal = cat;
+}
+
+function catColor(cat) {
+  const m={Motor:'#4f6ef7',Suspensie:'#3db87a','Frâne':'#e24b4a',Transmisie:'#ef9f27',Caroserie:'#7c5cbf',Interior:'#d4537e',Electric:'#f5a623',Tuning:'#1d9e75',Probleme:'#e24b4a',Altele:'#8888aa'};
+  return m[cat]||'#8888aa';
+}
+
+function toggleExpand(id) { expanded[id]=!expanded[id]; renderCards(); }
+function renderAll() { renderChips(); renderCards(); }
+
+function renderChips() {
+  const cats = ['all',...new Set(entries.map(e=>e.cat))];
+  document.getElementById('chips').innerHTML = cats.map(c =>
+    `<div class="chip ${activeFilter===c?'active':''}" onclick="setFilter('${c}')">${c==='all'?'Toate':c}</div>`
+  ).join('');
+}
+
+function setFilter(cat) { activeFilter=cat; renderChips(); renderCards(); }
+
+function renderCards() {
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const filtered=entries.filter(e=>(activeFilter==='all'||e.cat===activeFilter)&&(!q||e.title.toLowerCase().includes(q)||e.body.toLowerCase().includes(q)));
+  const c=document.getElementById('cards');
+  if (!filtered.length) {
+    c.innerHTML=`<div class="empty"><div class="empty-icon">${entries.length?'🔍':'🔧'}</div><p>${entries.length?'Nicio intrare găsită.':'Nicio informație adăugată încă.'}</p></div>`;
     return;
   }
-  list.innerHTML=cars.map(function(car){
-    var cs=carStatus(car), isOpen=!!expanded[car.id];
-    var docsHtml=DOC_KEYS.map(function(k){
-      if(k==='revizie'){
-        var rev=car.docs&&car.docs.revizie||{};
-        var st=revStatus(rev), kmLeft=revKmLeft(rev), nxt=revNextKm(rev);
-        var badge=rev.lastKm?(kmLeft<=0?'DEPASIT':kmLeft<=1500?'CURAND':'OK'):'LIPSA';
-        var info=rev.lastKm?'urm. la '+fmtKm(nxt):'Necompletat';
-        var kmStr=kmLeft===null?'':(kmLeft<=0?Math.abs(kmLeft)+' km dep.':kmLeft.toLocaleString('ro-RO')+' km');
-        return '<div class="doc-row" onclick="openEditDoc('+car.id+',\'revizie\')">'+
-          '<span class="doc-badge badge-'+st+'">'+badge+'</span>'+
-          '<span class="doc-name">Revizie</span>'+
-          '<span class="doc-expiry">'+info+'</span>'+
-          '<span class="doc-days days-'+st+'">'+kmStr+'</span></div>';
-      }
-      var days=daysLeft(car.docs&&car.docs[k]&&car.docs[k].expiry), st=statusOf(days);
-      return '<div class="doc-row" onclick="openEditDoc('+car.id+',\''+k+'\')">'+
-        '<span class="doc-badge badge-'+st+'">'+badgeLabel(days)+'</span>'+
-        '<span class="doc-name">'+DOC_LABELS[k]+'</span>'+
-        '<span class="doc-expiry">'+fmtDate(car.docs&&car.docs[k]&&car.docs[k].expiry)+'</span>'+
-        '<span class="doc-days days-'+st+'">'+daysLabel(days)+'</span></div>';
-    }).join('');
-    return '<div class="car-card">'+
-      '<div class="car-card-header" onclick="toggle('+car.id+')">'+
-        thumbHtml(car.photo, car.name)+
-        '<div class="car-meta"><div class="car-name">'+car.name+'</div><div class="car-plate">'+(car.plate||'fara numar')+'</div></div>'+
-        '<div class="car-right"><div class="status-dot dot-'+cs+'"></div><span class="chevron'+(isOpen?' open':'')+'">&#9660;</span></div>'+
-      '</div>'+
-      (isOpen?'<div class="car-docs">'+docsHtml+'</div><div class="car-footer"><button onclick="openEditCar('+car.id+')">&#9998; Editeaza</button><button class="btn-del" onclick="deleteCar('+car.id+')">Sterge</button></div>':'')+
-    '</div>';
+  c.innerHTML=filtered.map(e=>{
+    const col=catColor(e.cat);
+    const isExp=expanded[e.id];
+    const short=e.body.length>130?e.body.slice(0,130)+'...':e.body;
+    const hasMore=e.body.length>130||(e.media&&e.media.length);
+    return `<div class="card">
+      <div class="card-top">
+        <div style="flex:1"><div class="card-title">${e.title}</div><div class="card-date">${e.date||''}</div></div>
+        <span class="badge" style="background:${col}22;color:${col}">${e.cat}</span>
+      </div>
+      ${isExp?`<div class="card-full">${e.body}</div>`:`<div class="card-body">${short}</div>`}
+      ${e.source?`<div class="card-source">📎 ${e.source}</div>`:''}
+      ${isExp&&e.media&&e.media.length?renderMedia(e.media):''}
+      <div class="card-actions">
+        ${hasMore?`<button class="expand-btn" onclick="toggleExpand('${e.id}')">${isExp?'▲ Mai puțin':'▼ Mai mult'}</button>`:'<span></span>'}
+        ${isAdmin?`<div style="display:flex;gap:6px"><button class="edit-btn" onclick="editEntry('${e.id}')">✏️ Editează</button><button class="del-btn" onclick="deleteEntry('${e.id}')">Șterge</button></div>`:''}
+      </div>
+    </div>`;
   }).join('');
 }
 
-function render(){ renderSummary(); renderCars(); }
-function toggle(id){ expanded[id]=!expanded[id]; render(); }
-function deleteCar(id){ if(!confirm('Stergi aceasta masina?')) return; cars=cars.filter(function(c){return c.id!==id;}); delete expanded[id]; save(); render(); }
-
-/* ── SHEET ── */
-function openSheet(html){
-  var ov=document.getElementById('sheetOverlay');
-  ov.style.display='flex'; ov.className='sheet-overlay';
-  ov.innerHTML='<div class="sheet"><div class="sheet-handle"></div>'+html+'</div>';
-  ov.onclick=function(e){if(e.target===ov)closeSheet();};
-}
-function closeSheet(){ var ov=document.getElementById('sheetOverlay'); ov.style.display='none'; ov.innerHTML=''; }
-
-function photoUploadAreaHtml(currentPhoto, target){
-  var hasPhoto = currentPhoto && currentPhoto.length > 0;
-  var previewHtml = hasPhoto
-    ? '<img id="photo_preview_img" src="'+currentPhoto+'" style="width:100%;height:100%;object-fit:cover;">'
-    : '<img id="photo_preview_img" src="" style="display:none;width:100%;height:100%;object-fit:cover;">';
-  var placeholderStyle = hasPhoto ? 'display:none;' : '';
-  return '<div class="photo-upload-area">'+
-    '<div class="photo-preview-box" onclick="triggerPhotoUpload(\''+target+'\')">'+
-      previewHtml+
-      '<div class="photo-placeholder" id="photo_placeholder" style="'+placeholderStyle+'">'+
-        '<div class="ph-icon">&#128247;</div>'+
-        '<span>Apasa sa adaugi o poza</span>'+
-      '</div>'+
-    '</div>'+
-    '<div class="photo-actions">'+
-      '<button class="photo-btn" onclick="triggerPhotoUpload(\''+target+'\')">&#128247; Alege poza</button>'+
-      (hasPhoto?'<button class="photo-btn danger" onclick="removePhoto(\''+target+'\')">Sterge poza</button>':'')+
-    '</div>'+
-  '</div>';
+function renderStats() {
+  document.getElementById('s-total').textContent=entries.length;
+  document.getElementById('s-cats').textContent=new Set(entries.map(e=>e.cat)).size;
+  document.getElementById('s-last').textContent=entries.length?entries[0].date:'—';
+  const bd={};
+  entries.forEach(e=>{bd[e.cat]=(bd[e.cat]||0)+1;});
+  const sorted=Object.entries(bd).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('s-bars').innerHTML=sorted.length?sorted.map(([cat,count])=>{
+    const pct=Math.round(count/entries.length*100);
+    return`<div class="bar-row"><div class="bar-header"><span>${cat}</span><span class="bar-count">${count} (${pct}%)</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${catColor(cat)}"></div></div></div>`;
+  }).join(''):'<div class="empty"><p>Nicio intrare.</p></div>';
 }
 
-/* ── ADD CAR ── */
-function openAddCar(){
-  openSheet(
-    '<div class="sheet-header"><span class="sheet-title">Masina noua</span><button class="sheet-close" onclick="closeSheet()">\u2715</button></div>'+
-    '<div class="sheet-body">'+
-      '<div class="field-row">'+
-        '<div class="field"><label>MARCA / MODEL</label><input type="text" id="f_name" placeholder="ex: BMW E36"></div>'+
-        '<div class="field"><label>NUMAR INMATR.</label><input type="text" id="f_plate" placeholder="ex: B 01 ABC"></div>'+
-      '</div>'+
-      '<div class="field"><label>POZA MASINA</label>'+photoUploadAreaHtml('','add')+'</div>'+
-      '<input type="hidden" id="f_photo" value="">'+
-      '<div class="sheet-section-title">Documente (optional)</div>'+
-      '<div class="field-row"><div class="field"><label>ITP</label><input type="date" id="f_itp"></div><div class="field"><label>RCA</label><input type="date" id="f_rca"></div></div>'+
-      '<div class="field"><label>ROVINIETA</label><input type="date" id="f_rovinieta"></div>'+
-      '<div class="sheet-section-title">Revizie (km)</div>'+
-      '<div class="field-row"><div class="field"><label>ULTIMA REVIZIE LA</label><input type="number" id="f_rev_last" placeholder="ex: 110000"></div><div class="field"><label>KM ACTUALI</label><input type="number" id="f_rev_cur" placeholder="ex: 115000"></div></div>'+
-      '<div class="field"><label>INTERVAL (KM)</label><input type="number" id="f_rev_int" value="10000"></div>'+
-      '<div class="rev-preview" id="add_rev_preview"></div>'+
-    '</div>'+
-    '<button class="btn-primary" onclick="saveCar()">Salveaza masina</button>'
-  );
-  ['f_rev_last','f_rev_cur','f_rev_int'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el) el.addEventListener('input',calcAddPreview);
-  });
+function addMediaField() {
+  const list=document.getElementById('media-links-list');
+  const row=document.createElement('div');
+  row.className='media-input-row';
+  row.innerHTML=`<input class="form-input media-url" type="url" placeholder="https://..." style="font-size:13px;padding:9px 12px"/><button class="media-rm-btn" onclick="this.parentElement.remove()">✕</button>`;
+  list.appendChild(row);
+}
+function getMediaLinks(){return Array.from(document.querySelectorAll('.media-url')).map(i=>i.value.trim()).filter(Boolean);}
+function clearMediaFields(){document.getElementById('media-links-list').innerHTML='';}
+
+function mediaType(url){
+  if(/youtube\.com\/watch|youtu\.be\//.test(url))return'youtube';
+  if(/\.(jpg|jpeg|png|gif|webp|bmp)(\?|$)/i.test(url)||(/imgur\.com\//.test(url)&&!/\.(mp4|gifv)/.test(url)))return'image';
+  if(/\.(mp4|webm|ogg)(\?|$)/i.test(url))return'video';
+  return'link';
+}
+function youtubeId(url){const m=url.match(/(?:v=|youtu\.be\/)([^&?]+)/);return m?m[1]:null;}
+function imgurDirect(url){if(/imgur\.com\/[a-zA-Z0-9]+$/.test(url)&&!url.includes('.'))return`https://i.imgur.com/${url.split('/').pop()}.jpg`;return url;}
+
+function renderMedia(links){
+  if(!links||!links.length)return'';
+  return`<div class="card-media">${links.map(url=>{
+    const t=mediaType(url);
+    if(t==='youtube'){const id=youtubeId(url);return id?`<div class="media-thumb"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe></div>`:'';};
+    if(t==='image')return`<div class="media-thumb"><img src="${imgurDirect(url)}" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`;
+    if(t==='video')return`<div class="media-thumb"><video controls style="width:100%;max-height:220px;display:block"><source src="${url}"></video></div>`;
+    const label=url.length>45?url.slice(0,45)+'...':url;
+    return`<a class="media-link-btn" href="${url}" target="_blank">🔗 <span>${label}</span></a>`;
+  }).join('')}</div>`;
 }
 
-function calcAddPreview(){
-  var last=parseInt(document.getElementById('f_rev_last').value)||0;
-  var cur=parseInt(document.getElementById('f_rev_cur').value)||0;
-  var iv=parseInt(document.getElementById('f_rev_int').value)||10000;
-  var p=document.getElementById('add_rev_preview');
-  if(!p||!last){if(p)p.innerHTML='';return;}
-  var next=last+iv,left=next-cur;
-  p.innerHTML='Urmatoarea revizie la <b>'+next.toLocaleString('ro-RO')+' km</b><br>'+
-    (left>0?'Mai sunt: <b>'+left.toLocaleString('ro-RO')+' km</b>':'<span style="color:var(--red)">Depasita cu <b>'+Math.abs(left).toLocaleString('ro-RO')+' km</b></span>');
-}
-
-function saveCar(){
-  var name=(document.getElementById('f_name').value||'').trim();
-  if(!name){ alert('Introdu marca/modelul'); return; }
-  var car={
-    id:Date.now(), name:name,
-    plate:(document.getElementById('f_plate').value||'').trim(),
-    photo:document.getElementById('f_photo').value||'',
-    docs:{
-      itp:{expiry:document.getElementById('f_itp').value||''},
-      rca:{expiry:document.getElementById('f_rca').value||''},
-      rovinieta:{expiry:document.getElementById('f_rovinieta').value||''},
-      revizie:{lastKm:document.getElementById('f_rev_last').value||'',currentKm:document.getElementById('f_rev_cur').value||'',interval:document.getElementById('f_rev_int').value||'10000'}
-    }
-  };
-  cars.push(car); expanded[car.id]=true; save(); closeSheet(); render();
-}
-
-/* ── EDIT CAR ── */
-function openEditCar(id){
-  var car=cars.find(function(c){return c.id===id;}); if(!car) return;
-  openSheet(
-    '<div class="sheet-header"><span class="sheet-title">Editeaza masina</span><button class="sheet-close" onclick="closeSheet()">\u2715</button></div>'+
-    '<div class="sheet-body">'+
-      '<div class="field-row">'+
-        '<div class="field"><label>MARCA / MODEL</label><input type="text" id="fe_name" value="'+car.name+'"></div>'+
-        '<div class="field"><label>NUMAR INMATR.</label><input type="text" id="fe_plate" value="'+(car.plate||'')+'"></div>'+
-      '</div>'+
-      '<div class="field"><label>POZA MASINA</label>'+photoUploadAreaHtml(car.photo||'',id)+'</div>'+
-    '</div>'+
-    '<button class="btn-primary" onclick="saveEditCar('+id+')">Salveaza</button>'
-  );
-}
-
-function saveEditCar(id){
-  var car=cars.find(function(c){return c.id===id;}); if(!car) return;
-  car.name=(document.getElementById('fe_name').value||'').trim()||car.name;
-  car.plate=(document.getElementById('fe_plate').value||'').trim();
-  save(); closeSheet(); render();
-}
-
-/* ── EDIT DOC ── */
-function openEditDoc(carId,key){
-  var car=cars.find(function(c){return c.id===carId;}); if(!car) return;
-  if(key==='revizie'){
-    var rev=car.docs&&car.docs.revizie||{};
-    openSheet(
-      '<div class="sheet-header"><span class="sheet-title">Revizie \u2014 '+car.name+'</span><button class="sheet-close" onclick="closeSheet()">\u2715</button></div>'+
-      '<div class="sheet-body">'+
-        '<div class="field-row"><div class="field"><label>ULTIMA REVIZIE LA</label><input type="number" id="fd_rev_last" value="'+(rev.lastKm||'')+'" placeholder="ex: 110000"></div><div class="field"><label>KM ACTUALI</label><input type="number" id="fd_rev_cur" value="'+(rev.currentKm||'')+'" placeholder="ex: 115000"></div></div>'+
-        '<div class="field"><label>INTERVAL (KM)</label><input type="number" id="fd_rev_int" value="'+(rev.interval||'10000')+'"></div>'+
-        '<div class="rev-preview" id="edit_rev_preview"></div>'+
-      '</div>'+
-      '<button class="btn-primary" onclick="saveRevDoc('+carId+')">Salveaza</button>'
-    );
-    ['fd_rev_last','fd_rev_cur','fd_rev_int'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.addEventListener('input',calcEditPreview);
-    });
-    calcEditPreview();
-    return;
-  }
-  openSheet(
-    '<div class="sheet-header"><span class="sheet-title">'+DOC_LABELS[key]+' \u2014 '+car.name+'</span><button class="sheet-close" onclick="closeSheet()">\u2715</button></div>'+
-    '<div class="sheet-body"><div class="field"><label>DATA EXPIRARE '+DOC_LABELS[key]+'</label><input type="date" id="fd_expiry" value="'+((car.docs&&car.docs[key]&&car.docs[key].expiry)||'')+'"></div></div>'+
-    '<button class="btn-primary" onclick="saveDoc('+carId+',\''+key+'\')">Salveaza</button>'
-  );
-}
-
-function calcEditPreview(){
-  var last=parseInt(document.getElementById('fd_rev_last').value)||0;
-  var cur=parseInt(document.getElementById('fd_rev_cur').value)||0;
-  var iv=parseInt(document.getElementById('fd_rev_int').value)||10000;
-  var p=document.getElementById('edit_rev_preview');
-  if(!p||!last){if(p)p.innerHTML='';return;}
-  var next=last+iv,left=next-cur;
-  p.innerHTML='Urmatoarea revizie la <b>'+next.toLocaleString('ro-RO')+' km</b><br>'+
-    (left>0?'Mai sunt: <b>'+left.toLocaleString('ro-RO')+' km</b>':'<span style="color:var(--red)">Depasita cu <b>'+Math.abs(left).toLocaleString('ro-RO')+' km</b></span>');
-}
-
-function saveRevDoc(carId){
-  var car=cars.find(function(c){return c.id===carId;}); if(!car) return;
-  if(!car.docs) car.docs={};
-  car.docs.revizie={lastKm:document.getElementById('fd_rev_last').value||'',currentKm:document.getElementById('fd_rev_cur').value||'',interval:document.getElementById('fd_rev_int').value||'10000'};
-  save(); closeSheet(); render();
-}
-
-function saveDoc(carId,key){
-  var car=cars.find(function(c){return c.id===carId;}); if(!car) return;
-  if(!car.docs) car.docs={}; if(!car.docs[key]) car.docs[key]={};
-  car.docs[key].expiry=document.getElementById('fd_expiry').value;
-  save(); closeSheet(); render();
-}
-
-/* ── THEME ── */
 function toggleTheme(){
-  var isLight=document.body.classList.toggle('light');
-  document.getElementById('themeBtn').innerHTML=isLight?'&#9679;':'&#127769;';
-  try{ localStorage.setItem('docauto_theme',isLight?'light':'dark'); } catch(e){}
+  const isLight=document.documentElement.classList.toggle('light');
+  document.getElementById('theme-btn').textContent=isLight?'☀️':'🌙';
+  document.querySelector('meta[name="theme-color"]').content=isLight?'#ffffff':'#1a1a2e';
+  localStorage.setItem('bmwe36_theme',isLight?'light':'dark');
 }
-(function(){
-  try{
-    if(localStorage.getItem('docauto_theme')==='light'){
-      document.body.classList.add('light');
-      document.getElementById('themeBtn').innerHTML='&#9679;';
-    }
-  } catch(e){}
-})();
+if(localStorage.getItem('bmwe36_theme')==='light'){
+  document.documentElement.classList.add('light');
+  document.getElementById('theme-btn').textContent='☀️';
+  document.querySelector('meta[name="theme-color"]').content='#ffffff';
+}
 
-/* ── SERVICE WORKER ── */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js').catch(function(){});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          document.getElementById('update-banner').classList.add('show');
+        }
+      });
+    });
+  }).catch(()=>{});
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
   });
 }
 
-load(); render();
+function applyUpdate() {
+  navigator.serviceWorker.getRegistration().then(reg => {
+    if (reg && reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+  });
+}
 </script>
 </body>
 </html>

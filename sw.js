@@ -1,4 +1,4 @@
-const CACHE = 'docauto-v1';
+const CACHE = 'bmw-e36-v3';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
