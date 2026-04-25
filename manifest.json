@@ -1,12 +1,12 @@
 {
-  "name": "BMW E36 — Baza de cunoștințe",
-  "short_name": "BMW E36",
-  "description": "Colecție personală de informații, probleme și soluții pentru BMW E36",
+  "name": "DocAuto — Documente Masini",
+  "short_name": "DocAuto",
+  "description": "Gestioneaza ITP, RCA, Rovinieta si Revizia masinilor tale",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
-  "background_color": "#0f0f1a",
-  "theme_color": "#1a1a2e",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
   "orientation": "portrait",
   "icons": [
     {
